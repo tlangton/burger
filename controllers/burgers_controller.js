@@ -6,30 +6,27 @@ var router = express.Router();
 var burger = require("../models/burger.js");
 
 // middleware that is specific to this router
-router.use(function timeLog (req, res, next) {
-  console.log('Time: ', Date.now())
-  next()
-})
+router.use(function timeLog(req, res, next) {
+  console.log("Time: ", Date.now());
+  next();
+});
 
 // Create all our routes and set up logic within those routes where required.
 router.get("/", function(req, res) {
   burger.all(function(data) {
-    var hbsObject = {
-      burgers: data
-    };
-    console.log(hbsObject);
-    res.render("index", hbsObject);
+    console.log(data);
+    res.render("index", { burgers: data });
   });
 });
 
 router.post("/", function(req, res) {
-  burger.create([
-    "burger_name", "devoured"
-  ], [
-    req.body.burger_name, 0
-  ], function() {
-    res.redirect("/");
-  });
+  burger.create(
+    ["burger_name", "devoured"],
+    [req.body.burger_name, 0],
+    function() {
+      res.redirect("/");
+    }
+  );
 });
 
 router.put("/:id", function(req, res) {
@@ -37,11 +34,15 @@ router.put("/:id", function(req, res) {
 
   console.log("condition", condition);
 
-  burger.update({
-    devoured: 1
-  }, condition, function() {
-    res.redirect("/");
-  });
+  burger.update(
+    {
+      devoured: 1
+    },
+    condition,
+    function() {
+      res.redirect("/");
+    }
+  );
 });
 
 router.delete("/:id", function(req, res) {
